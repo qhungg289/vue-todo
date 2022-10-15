@@ -1,22 +1,15 @@
-import { ref, watchEffect, computed } from "vue"
+import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
 import { defineStore } from "pinia"
+import { useStorage, StorageSerializers } from "@vueuse/core"
 
 const baseUrl = "https://qhungg289-todo.fly.dev/api/"
 
 export const useUserStore = defineStore("user", () => {
-    const user = ref(null)
+    const user = useStorage("user", null, localStorage, { serializer: StorageSerializers.object })
+    const token = useStorage("token", null, localStorage, { serializer: StorageSerializers.string })
     const error = ref(null)
-    const isAuthenticated = computed(() => !!JSON.parse(localStorage.getItem("user")))
-
-    watchEffect(() => {
-        const userFromStorge = JSON.parse(localStorage.getItem("user"))
-
-        if (userFromStorge) {
-            user.value = userFromStorge
-        }
-    })
-
+    const isAuthenticated = computed(() => !!user.value)
     const router = useRouter()
 
     async function login(email, password) {
@@ -38,8 +31,7 @@ export const useUserStore = defineStore("user", () => {
 
             console.log(resData)
             user.value = resData.user
-            localStorage.setItem("token", resData.token)
-            localStorage.setItem("user", JSON.stringify(resData.user))
+            token.value = resData.token
             error.value = null
 
             router.push("/")
@@ -69,8 +61,7 @@ export const useUserStore = defineStore("user", () => {
             }
 
             user.value = resData.user
-            localStorage.setItem("token", resData.token)
-            localStorage.setItem("user", JSON.stringify(resData.user))
+            token.value = resData.token
             error.value = null
 
             router.push("/")
@@ -79,5 +70,24 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
-    return { user, error, login, signup, isLoggedIn: isAuthenticated }
+    async function logout() {
+        try {
+            await fetch(baseUrl + "logout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token.value}`
+                },
+            })
+
+            user.value = null
+            token.value = null
+
+            location.reload()
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    return { user, error, login, signup, logout, isAuthenticated }
 })
