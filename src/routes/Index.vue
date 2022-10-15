@@ -10,10 +10,11 @@ const userStore = useUserStore()
     <div class="flex flex-col items-center justify-center gap-6 min-h-screen">
         <h1 class="font-serif font-bold text-5xl">V - Todo</h1>
         <div v-if="userStore.user" class="flex flex-col items-center gap-3">
-            <p>Xin chào, <span class="font-semibold">{{ userStore.user.name }}</span>!</p>
+            <p>Hello, <span class="font-semibold">{{ userStore.user.name }}</span>!</p>
             <router-link to="todos">
                 <button-primary>Start using</button-primary>
             </router-link>
+            <button-secondary @click="userStore.logout">Log out</button-secondary>
         </div>
         <div v-else class="flex gap-3">
             <router-link to="login">
