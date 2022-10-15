@@ -3,7 +3,6 @@ import { createPinia } from 'pinia'
 import './style.css'
 import App from './App.vue'
 import { createWebHistory, createRouter } from 'vue-router'
-import { useUserStore } from './stores/user'
 
 import Index from './routes/Index.vue'
 import Login from './routes/Login.vue'
@@ -14,21 +13,34 @@ const app = createApp(App)
 const router = createRouter({
     history: createWebHistory(),
     routes: [
-        { path: '/', component: Index },
-        { path: '/signup', component: Signup },
-        { path: '/login', component: Login },
+        {
+            path: '/',
+            component: Index,
+        },
+        {
+            path: '/signup',
+            component: Signup,
+            beforeEnter: () => {
+                const token = localStorage.getItem('token')
+                if (token) {
+                    return '/'
+                }
+            }
+        },
+        {
+            path: '/login',
+            component: Login,
+            beforeEnter: () => {
+                const token = localStorage.getItem('token')
+                if (token) {
+                    return '/'
+                }
+            }
+        },
     ]
 })
 
-router.beforeEach((to, from) => {
-    const userStore = useUserStore()
-
-    if (userStore.isLoggedIn && (to.path == '/signup' || to.path == '/login')) {
-        return '/todos'
-    }
-})
-
-app.use(createPinia())
 app.use(router)
+app.use(createPinia())
 
 app.mount('#app')
