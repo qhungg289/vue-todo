@@ -1,7 +1,7 @@
 <script setup>
-    defineProps({
-        onClick: Function
-    })
+defineProps({
+    onClick: Function
+})
 </script>
 
 <template>
