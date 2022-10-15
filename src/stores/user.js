@@ -29,7 +29,6 @@ export const useUserStore = defineStore("user", () => {
 
             const resData = await res.json()
 
-            console.log(resData)
             user.value = resData.user
             token.value = resData.token
             error.value = null
