@@ -5,9 +5,21 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,vue}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        "nunito": ["Nunito", "sans-serif"],
+      }
+    },
+    container: {
+      center: true,
+      padding: "2rem"
+    }
   },
   plugins: [
-    require('@tailwindcss/forms'),
+    require("@tailwindcss/forms"),
+    require("daisyui"),
   ],
+  daisyui: {
+    darkTheme: "light"
+  }
 }

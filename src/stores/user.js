@@ -2,6 +2,7 @@ import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
 import { defineStore } from "pinia"
 import { useStorage, StorageSerializers } from "@vueuse/core"
+import { userAPI } from "../api/user"
 
 const baseUrl = "https://qhungg289-todo.fly.dev/api/"
 

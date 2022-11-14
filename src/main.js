@@ -7,6 +7,7 @@ import { createWebHistory, createRouter } from 'vue-router'
 import Index from './routes/Index.vue'
 import Login from './routes/Login.vue'
 import Signup from './routes/Signup.vue'
+import Todos from './routes/Todos/Index.vue'
 
 const app = createApp(App)
 
@@ -37,6 +38,16 @@ const router = createRouter({
                 }
             }
         },
+        {
+            path: '/todos',
+            component: Todos,
+            beforeEnter: () => {
+                const token = localStorage.getItem('token')
+                if (!token) {
+                    return '/login'
+                }
+            }
+        }
     ]
 })
 
